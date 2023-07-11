@@ -44,3 +44,4 @@ if os_name == 'ubuntu':
     writer.writerow(data_csv)
     file.close()
     print("File Import SUCCESSFULLY from your Current Directory" +file_path)
+    print("END")
