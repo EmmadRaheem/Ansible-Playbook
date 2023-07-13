@@ -4,10 +4,18 @@ import os
 import csv
 import json
 
+file_path = "Daily_Report.csv"
+
+'''
+
+# Add datetime in a filename
+
 from datetime import *
 date = date.today()
 time = datetime.now()
 file_path = time.strftime("Daily_Reports_%Y-%m-%d_%H-%M.csv")
+
+'''
 
 json_file="01-Linux_Command.json"
 with open(json_file) as jf:
@@ -44,4 +52,3 @@ if os_name == 'ubuntu':
     writer.writerow(data_csv)
     file.close()
     print("File Import SUCCESSFULLY from your Current Directory" +file_path)
-    print("END")
