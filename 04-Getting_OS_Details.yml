@@ -1,0 +1,41 @@
+---
+- hosts: ubuntu
+  tasks:
+  - name: Adding the header to CSV file 
+    # Module to create a CSV file in ansible
+    lineinfile:
+      path: /home/emmad/OS_OUTPUT.csv
+      line: "HOSTNAME,IP ADDRESS,DF -h (mount details)"
+      create: yes 
+  - name: Collecting hostname 
+    shell: "hostname | tr -d '\n'"
+    # Store the output of the above command in the register
+    register: hostname_details
+  # Used to print the output store in a variable
+  - debug:
+      var: hostname_details.stdout
+  - name: Collecting IP address
+    shell: "hostname -I | awk '{print $1}' | tr -d '\n'"
+    register: ip_details
+  - debug:
+      var: ip_details.stdout
+  - name: Collecting the disk storage output
+    shell: "df -h | grep -v 'tmpfs'"
+    register: df_details
+  - debug:
+      var: df_details.stdout_lines
+  - name: Save data to CSV file 
+    lineinfile:
+      # Use dest: instead of path: to append the data in a CSV file
+      # Use path: if you want to create a new CSV file
+      dest: /home/emmad/OS_OUTPUT.csv
+      line: "{{ hostname_details.stdout }},{{ip_details.stdout }},\"{{ df_details.stdout }}\""
+        #delimiter: ','
+  - name: Fetching the /home/emmad/OS_OUTPUT.csv file to ansible master machine (/home/emmad/ansible/OS_OUTPUT.csv)
+    fetch: 
+      src: /home/emmad/OS_OUTPUT.csv
+      dest: /home/emmad/ansible/OS_OUTPUT_{{ansible_hostname}}_{{ansible_date_time.hour}}:{{ansible_date_time.minute}}.csv
+      flat: yes
+     
+     
+
