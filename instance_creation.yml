@@ -1,0 +1,18 @@
+---
+- name : EC2 Instance Details
+  hosts: all
+  gather_facts: false
+  vars_files:
+    - AWS_Access_Key.yml
+  tasks:
+  - name: Getting EC2 instance details 
+    amazon.aws.ec2_instance:  
+      region: "us-east-1"
+      filters: 
+        instance-state-name: "running" 
+    register: ec2_details
+  
+  - name: Displaying the instance details
+    debug:
+      var: item
+    loop: "{{ ec2_details.instances }}"
